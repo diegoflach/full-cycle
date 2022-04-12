@@ -1,3 +1,3 @@
 # Full Cycle
 
-Docker Hub: diegoflach/codeeducation
+Docker Hub (imagem go): diegoflach/codeeducation
