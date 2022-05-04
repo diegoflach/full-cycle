@@ -21,7 +21,7 @@ services:
     build: 
       context: ./node
     container_name: node
-    entrypoint: dockerize -wait tcp://db:3306 -timeout 20s docker-entrypoint.sh
+    entrypoint: dockerize -wait tcp://db:3306 -timeout 30s docker-entrypoint.sh
     command: node index.js
     networks: 
       - node-network
