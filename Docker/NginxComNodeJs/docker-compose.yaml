@@ -9,7 +9,8 @@ services:
     restart: always
     tty: true
     volumes: 
-      - ./mysql:/var/lib/mysql
+      - ./mysql/db/data:/var/lib/mysql
+      - ./mysql/db/init:/docker-entrypoint-initdb.d/:ro
     environment: 
       - MYSQL_DATABASE=nodedb
       - MYSQL_ROOT_PASSWORD=root
@@ -19,14 +20,11 @@ services:
   node:
     build: 
       context: ./node
-      dockerfile: Dockerfile.prod
     container_name: node
     entrypoint: dockerize -wait tcp://db:3306 -timeout 20s docker-entrypoint.sh
     command: node index.js
     networks: 
       - node-network
-    volumes: 
-      - ./node:/usr/src/app
     tty: true
     depends_on: 
        - db
