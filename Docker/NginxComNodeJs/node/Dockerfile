@@ -1,10 +1,10 @@
-FROM node:15
+FROM node:16
 
 WORKDIR /usr/src/app
 
 COPY . .
 
-RUN npm init -y && npm install express --save && npm install mysql --save
+RUN npm init -y && npm install express --save && npm install mysql --save && npm install config --save
 
 RUN apt-get update && apt-get install -y wget
 

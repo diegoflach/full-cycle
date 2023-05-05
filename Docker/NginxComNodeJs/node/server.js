@@ -1,12 +1,11 @@
-const express = require("express");
-const routes = require('./api/routes/peopleRoute');
+const app = require('./config/express')();
+const path = require('path');
+const port = app.get('port');
 
-const app = express();
-const port = 3000;
+app.get('/', function(req, res) {
+    res.sendFile(path.join(__dirname, 'client/index.html'));
+  });
 
-app.use(express.json());
-app.use('/', routes);
-
-const listener = app.listen(process.env.PORT || port, () => {
-    console.log('App is listening on port ' + listener.address().port)
-})
+app.listen(port, () => {
+    console.log('Rodando na porta ' + port)
+});

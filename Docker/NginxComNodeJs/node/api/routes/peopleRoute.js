@@ -1,10 +1,6 @@
-'use strict';
-
-const express = require('express');
-const router = express.Router();
-const peopleController = require('../controllers/peopleController')
-
-router.post('/people', peopleController.newPerson);
-router.get('/people', peopleController.getPeople);
-
-module.exports = router;
+module.exports = app => {
+    const peopleController = require('../controllers/peopleController')();
+  
+    app.route('/api/v1/people').get(peopleController.getPeople);
+    app.route('/api/v1/people').post(peopleController.newPerson);
+}

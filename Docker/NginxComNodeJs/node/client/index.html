@@ -1,38 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Sample Site</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-  <style>
-    body { padding-top: 50px; }
-  </style>
-</head>
-<body>
-  <form>
-    <div class="form-group">
-      <label for="txtName">Name</label>
-      <input type="text" class="form-control" id="txtName" placeholder="Enter name">
-    </div>
-    <button type="submit" class="btn btn-primary" onclick = "save()">Save</button>
-  </form>
-</body>
-</html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Cadastro de Pessoas</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script>
+      const loadPeople = () => {
+        const xmlHttp = new XMLHttpRequest();
 
-<script>
-  async function save() {
-    try {     
-      const name = document.getElementById('txtName').value;
+        xmlHttp.open("GET", "/api/v1/people", false);
+        xmlHttp.send();
 
-      const response = await fetch('/people', {
-        method: 'post',
-        body: {
-          name: name
+        const people = JSON.parse(xmlHttp.responseText);
+        const divPeople = document.getElementById('people');
+        divPeople.innerHTML = "";
+
+        for (let person of people) {
+          const personHtml = `
+              <div class="col-4">
+                  <div class="card">
+                      <div class="card-body">
+                          <h5 class="card-title">${person.name}</h5>
+                      </div>
+                  </div>
+              </div>
+          `
+          divPeople.innerHTML = divPeople.innerHTML + personHtml;
         }
-      });
-      console.log('Completed!', response);
-    } catch(err) {
-      console.error(`Error: ${err}`);
-    }
-  }
+      };  
+
+      const addPerson = () => {
+        const txtName = document.getElementById('name');
+        const name = txtName.value;
+
+        if(name === "")
+        {
+          alert("Informe um nome");
+          return;
+        }
+
+        var data = {name:name}
+        var xmlHttp = new XMLHttpRequest();
+
+        xmlHttp.open("POST", "/api/v1/people", false); // false for synchronous request
+        xmlHttp.setRequestHeader("Content-type", "application/json");
+        xmlHttp.send(JSON.stringify(data));   
+
+        xmlHttp.onerror = () => {
+          alert("Request failed");
+        };
+
+        loadPeople();
+        txtName.value = "";
+      }
+    </script>
+    <style>
+      body { padding-top: 50px; }
+
+      .box {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 220px;
+      }
+
+      .container {
+        width: 35%;
+      }
+
+      .spacer {
+        padding-top: 60px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <hr>
+        <h1>Cadastro de Pessoas</h1>
+      <hr>
+      <div class="box spacer">
+        <div class="form-group">
+          <label for="name">Nome</label>
+          <input type="text" class="form-control" id="name" name="name" placeholder="Digite o nome">
+        </div>
+        <button value="Salvar" class="btn btn-primary" onclick="addPerson()">Salvar</button>
+      </div>
+    </div>
+    <div class="container spacer">
+      <hr>
+      <h1>Pessoas</h1>
+      <hr>
+      <div>
+          <div class="row spacer" id="people">
+          </div>
+      </div>
+  </div>
+  </body>
+</html>
+<script>
+  loadPeople();
 </script>

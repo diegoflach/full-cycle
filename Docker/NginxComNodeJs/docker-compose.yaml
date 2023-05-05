@@ -22,7 +22,7 @@ services:
       context: ./node
     container_name: node
     entrypoint: dockerize -wait tcp://db:3306 -timeout 30s docker-entrypoint.sh
-    command: node index.js
+    command: node server.js
     networks: 
       - node-network
     tty: true
